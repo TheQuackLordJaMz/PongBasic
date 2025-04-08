@@ -1,0 +1,59 @@
+public class Ball : MonoBehaviour
+{
+    //Make Ball move randomly (doesnt move randomly on start yet)
+    //make ball bounce off rackets and walls
+    //When passes or collides with a goal side we will reset its position and score points
+
+    public float bSpeed = 30f;
+    [SerializeField] private Rigidbody2D rb;                //Rigidbody2D will be ref as rb
+
+    
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>();                   //ref the Rigidbody (CACHE THE RIGIDBODY)
+        rb.linearVelocity = Vector2.right * bSpeed;
+    }
+
+    //divide the balls y pos by the paddles height so it can deflect the ball properly
+    float hitFactor(Vector2 ballPos, Vector2 paddlePos, float paddleHeight) 
+    {
+        //1< at top of the paddle
+        //0< at the middle
+        //-1 at the bottom of the paddle
+        return (ballPos.y - paddlePos.y) / paddleHeight;
+    }
+
+
+    //check for collisons
+    private void OnCollisionEnter2D(Collision2D col)
+    {
+        //Hit the left paddle?
+        if (col.gameObject.name == ("PlayerOnePaddle")) 
+        {
+            //calculate the hitfactor
+            float y = hitFactor(transform.position, col.transform.position, col.collider.bounds.size.y);
+
+            //calculate the direction ,make the lentgh = 1 via .normailised
+            Vector2 dir = new Vector2(1, y).normalized;
+
+            //set the velocity with dir * speed
+            rb.linearVelocity = dir * bSpeed;
+        }
+
+        //Hit the right paddle?
+        if (col.gameObject.name == ("PlayerTwoPaddle"))
+        {
+            //calculate the hitfactor
+            float y = hitFactor(transform.position, col.transform.position, col.collider.bounds.size.y);
+
+            //calculate the direction ,make the lentgh = -1 via .normailised
+            Vector2 dir = new Vector2(-1, y).normalized;
+
+            //set the velocity with dir * speed
+            rb.linearVelocity = dir * bSpeed;
+        }
+    }
+
+
+}
