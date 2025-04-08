@@ -1,0 +1,25 @@
+public class PlayerPaddle : MonoBehaviour
+{
+    //We will move paddle up and down 
+    //paddle will not move past top/bottom boundarys
+    //paddle will collide with ball and delfect it away 
+    //we set up in the input manager a way for player 2 to move up/down  using string axis we call Vertical for player1 and Vertical2 for player2
+
+    [SerializeField] private Rigidbody2D rb;        //ref the Rigidbody in the inspector
+
+        public float speed;                         //player paddle speed
+        public string axis = "Vertical";            //we check in the inspector are we player one or player 2
+
+
+
+    private void Start()
+    {
+        rb = GetComponent<Rigidbody2D>(); //cache the Rigidbody
+    }
+
+    private void FixedUpdate()
+    {
+        float v = Input.GetAxisRaw(axis); //vertical input up/down
+        rb.linearVelocity = new Vector2(0, v * speed);
+    }
+}
